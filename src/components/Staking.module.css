@@ -19,6 +19,7 @@
   border-radius: 0.5em;
   border: none;
   text-align: center;
+  display: block;
 }
 
 input:focus {
