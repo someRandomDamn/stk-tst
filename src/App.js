@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { MutatingDots } from "react-loader-spinner";
 import Web3 from 'web3';
 import classes from './App.module.css';
 import TestTokenAbi from '../src/abis/TestToken.json';
@@ -16,14 +17,6 @@ const App = () => {
   const [stakingCreationContract, setStakingCreationContract] = useState('');
   const [tokenStakingContract, setTokenStakingContract] = useState('');
   const [inputValue, setInputValue] = useState('');
-  const [createStaking, setCreateStaking] = useState({
-    stakeAddress: '',
-    poolAddress: '',
-    startBlock: '',
-    finishBlock: '',
-    poolTokenSupply: '',
-    hasWhitelisting: false,
-  });
   const [allStakedAmount, setAllStakedAmount] = useState(0);
   const [myStake, setMyStake] = useState(0);
   const [allRewardDebt, setAllRewardDebt] = useState(0);
@@ -46,16 +39,14 @@ const App = () => {
 
   useEffect(() => {
     //connecting to ethereum blockchain
-    const ethEnabled = async () => {
-      fetchDataFromBlockchain();
-    };
+    fetchDataFromBlockchain();
 
-    ethEnabled();
-  }, []);
+  }, [currentStakingContractAddress]);
 
   const fetchDataFromBlockchain = async () => {
     console.log('currentStakingContractAddress');
     console.log(currentStakingContractAddress);
+    setLoader(true);
     if (window.ethereum) {
       // await window.ethereum.send('eth_requestAccounts');
       await window.ethereum.request({ method: 'eth_requestAccounts' });
@@ -171,28 +162,20 @@ const App = () => {
           'Staking contract is not deployed on this network, please change to testnet'
         );
       }
-
-      //removing loader
-      setLoader(false);
     } else if (!window.web3) {
       setAppStatus(false);
       setAccount('Metamask is not detected');
-      setLoader(false);
     }
+
+    setLoader(false);
   };
 
   const inputHandler = (received) => {
     setInputValue(received);
   };
 
-  const createStakingHandler = (received) => {
-    setCreateStaking(received);
-  };
-
   const stakingContractHandler = (contract) => {
     setCurrentStakingContract(contract);
-    console.log(contract);
-    fetchDataFromBlockchain();
   };
 
   const stakeHandler = () => {
@@ -376,11 +359,12 @@ const App = () => {
 
   return (
     <div className={classes.Grid}>
-      {loader ? <div className={classes.curtain}></div> : null}
+      <div className={classes.ChildLoader}>
+        {loader ? <MutatingDots arialLabel="loading-indicator" width="100px" /> : null}
+      </div>
       <div className={classes.Child1}>
         <div>
           <CreateStaking
-            createStakingHandler={createStakingHandler}
             createStakingPoolHandler={createStakingPoolHandler}
           />
         </div>

@@ -19,11 +19,6 @@ const Staking = (props) => {
         setCurrentStakingContract(event.target.value);
     };
 
-  const goMax = () => {
-    setInputValue(props.userBalance);
-    props.inputHandler(props.userBalance);
-  };
-
   return (
     <div className={classes.Staking}>
       <img src={icon} alt="logo" className={classes.icon} />

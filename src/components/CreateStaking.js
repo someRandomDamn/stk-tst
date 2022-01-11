@@ -16,11 +16,10 @@ const CreateStaking = (props) => {
 
   const inputChangeHandler = (event) => {
     event.preventDefault();
-    setInputValue(prev => {
-        prev[event.target.name] = event.target.value;
-        return prev;
+    setInputValue({
+        ...inputValue,
+        [event.target.name]: event.target.value,
     });
-    props.createStakingHandler(event.target.value);
   };
 
   return (
@@ -49,7 +48,6 @@ const CreateStaking = (props) => {
               className={classes.stakeButton}
               onClick={() => {
                   props.createStakingPoolHandler(inputValue);
-                  setInputValue(emptyStaking);
               }}
           >
               <img src={stakeIcon} alt="stake icon" className={classes.stakeIcon} />

@@ -9,6 +9,15 @@
   font-weight: 400;
 }
 
+.ChildLoader {
+  background-origin: padding-box, border-box;
+  border-radius: 2.5em;
+  grid-column: 4;
+  grid-row: 1;
+  text-align: center;
+  color: white;
+}
+
 .Child1 {
   background: linear-gradient(
       16deg,
@@ -71,17 +80,4 @@
 
 .childHeight {
   height: 40em;
-}
-
-.curtain {
-  background-color: rgba(0, 0, 0, 0.466);
-  position: static;
-  height: 99em;
-  width: auto;
-  grid-column-start: 1;
-  grid-column-end: 6;
-  z-index: 2;
-  filter: blur(8px);
-  -webkit-backdrop-filter: blur(1.5em);
-  backdrop-filter: blur(1.5em);
 }
