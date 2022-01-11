@@ -5,6 +5,7 @@ import TestTokenAbi from '../src/abis/TestToken.json';
 import TokenStakingAbi from '../src/abis/StakingCreation.json';
 import StakingAbi from '../src/abis/Staking.json';
 import CreateStaking from "./components/CreateStaking";
+import Info from "./components/Info";
 import Staking from './components/Staking';
 import moment from 'moment';
 
@@ -368,7 +369,6 @@ const App = () => {
   return (
     <div className={classes.Grid}>
       {loader ? <div className={classes.curtain}></div> : null}
-      <div className={classes.loader}></div>
       <div className={classes.Child1}>
         <div>
           <CreateStaking
@@ -378,8 +378,25 @@ const App = () => {
         </div>
       </div>
       <div className={classes.Child2}>
-        <div>
+        <div className={classes.childHeight}>
           <Staking
+              account={account}
+              totalStaked={totalStaked}
+              contractBalance={contractBalance}
+              myReward={myReward}
+              userBalance={userBalance}
+              unStakeHandler={unStakeHandler}
+              stakeHandler={stakeHandler}
+              inputHandler={inputHandler}
+              stakingContractHandler={stakingContractHandler}
+              claimRewardsHandler={claimRewardsHandler}
+              apy={apy}
+          />
+        </div>
+      </div>
+      <div className={classes.Child3}>
+        <div>
+          <Info
               account={account}
               totalStaked={totalStaked}
               contractBalance={contractBalance}
@@ -395,14 +412,8 @@ const App = () => {
               finishTime={finishTime}
               rewardPerSec={rewardPerSec}
               allStakedAmount={allStakedAmount}
-
               myReward={myReward}
               userBalance={userBalance}
-              unStakeHandler={unStakeHandler}
-              stakeHandler={stakeHandler}
-              inputHandler={inputHandler}
-              stakingContractHandler={stakingContractHandler}
-              claimRewardsHandler={claimRewardsHandler}
               apy={apy}
           />
         </div>
