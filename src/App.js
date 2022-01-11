@@ -24,11 +24,6 @@ const App = () => {
     poolTokenSupply: '',
     hasWhitelisting: false,
   });
-  const [contractBalance, setContractBalance] = useState('0');
-  const [totalStaked, setTotalStaked] = useState(0);
-  const [myReward, setMyReward] = useState(0);
-
-
   const [allStakedAmount, setAllStakedAmount] = useState(0);
   const [myStake, setMyStake] = useState(0);
   const [allRewardDebt, setAllRewardDebt] = useState(0);
@@ -44,7 +39,6 @@ const App = () => {
   const [appStatus, setAppStatus] = useState(true);
   const [loader, setLoader] = useState(false);
   const [userBalance, setUserBalance] = useState('0');
-  const [apy, setApy] = useState(0);
   const [currentStakingContractAddress, setCurrentStakingContract] = useState('');
 
   const tokenContractAddress = '0x9f11c83606fe28542f0278797c78cb66488d7eef';
@@ -96,18 +90,6 @@ const App = () => {
         );
         setUserBalance(convertedBalance);
 
-        //fetching contract balance
-        //updating total staked balance
-        let totalStaked = await testToken.methods
-          .balanceOf(stakingContractAddress)
-          .call();
-
-        convertedBalance = window.web3.utils.fromWei(
-          totalStaked.toString(),
-          'Ether'
-        );
-        //removing initial balance
-        setContractBalance(convertedBalance);
       } else {
         setAppStatus(false);
         window.alert(
@@ -132,6 +114,7 @@ const App = () => {
           setTokenStakingContract(stakingContract);
 
           let [
+            myStake,
             allRewardDebt,
             allPaidReward,
             accTokensPerShare,
@@ -143,6 +126,7 @@ const App = () => {
             finishTime,
             allStakedAmount,
           ] = await Promise.all([
+            stakingContract.methods.getUserInfo(accounts[0]).call(),
             stakingContract.methods.allRewardDebt().call(),
             stakingContract.methods.allPaidReward().call(),
             stakingContract.methods.accTokensPerShare().call(),
@@ -155,19 +139,7 @@ const App = () => {
             stakingContract.methods.allStakedAmount().call(),
           ])
 
-          console.log({
-            allRewardDebt,
-            allPaidReward,
-            accTokensPerShare,
-            participants,
-            pendingReward,
-            lastRewardTime,
-            rewardPerSec,
-            startTime,
-            finishTime,
-            allStakedAmount,
-          });
-
+          myStake = window.web3.utils.fromWei(myStake[0].toString(), 'Ether');
           allRewardDebt = window.web3.utils.fromWei(allRewardDebt.toString(), 'Ether');
           allPaidReward = window.web3.utils.fromWei(allPaidReward.toString(), 'Ether');
           accTokensPerShare = window.web3.utils.fromWei(accTokensPerShare.toString(), 'Ether');
@@ -178,6 +150,7 @@ const App = () => {
           finishTime =  moment.unix(finishTime).format("YYYY-MM-DD HH:mm");
           lastRewardTime =  moment.unix(lastRewardTime).format("YYYY-MM-DD HH:mm");
 
+          setMyStake(myStake);
           setAllRewardDebt(allRewardDebt);
           setAllPaidReward(allPaidReward);
           setAccTokensPerShare(accTokensPerShare);
@@ -265,30 +238,32 @@ const App = () => {
   const unStakeHandler = () => {
     if (!appStatus) {
     } else {
-      setLoader(true);
-
-      // let convertToWei = window.web3.utils.toWei(inputValue, 'Ether')
-      tokenStakingContract.methods
-        .withdrawAll()
-        .send({ from: account })
-        .on('transactionHash', (hash) => {
-          setLoader(false);
-          fetchDataFromBlockchain();
-        })
-        .on('receipt', (receipt) => {
-          setLoader(false);
-          fetchDataFromBlockchain();
-        })
-        .on('confirmation', (confirmationNumber, receipt) => {
-          setLoader(false);
-          fetchDataFromBlockchain();
-        })
-        .on('error', function(error) {
-          console.log('Error Code:', error.code);
-          console.log(error.message);
-          setLoader(false);
-        });
-
+      if (!inputValue || inputValue === '0' || inputValue < 0) {
+        setInputValue('');
+      } else {
+        setLoader(true);
+        let convertToWei = window.web3.utils.toWei(inputValue, 'Ether')
+        tokenStakingContract.methods
+          .withdrawStake(convertToWei)
+          .send({ from: account })
+          .on('transactionHash', (hash) => {
+            setLoader(false);
+            fetchDataFromBlockchain();
+          })
+          .on('receipt', (receipt) => {
+            setLoader(false);
+            fetchDataFromBlockchain();
+          })
+          .on('confirmation', (confirmationNumber, receipt) => {
+            setLoader(false);
+            fetchDataFromBlockchain();
+          })
+          .on('error', function(error) {
+            console.log('Error Code:', error.code);
+            console.log(error.message);
+            setLoader(false);
+          });
+      }
       setInputValue('');
     }
   };
@@ -296,11 +271,44 @@ const App = () => {
   const claimRewardsHandler = () => {
     if (!appStatus) {
     } else {
+      if (!inputValue || inputValue === '0' || inputValue < 0) {
+        setInputValue('');
+      } else {
+        setLoader(true);
+        let convertToWei = window.web3.utils.toWei(inputValue, 'Ether')
+        tokenStakingContract.methods
+          .withdrawStake(convertToWei)
+          .send({ from: account })
+          .on('transactionHash', (hash) => {
+            setLoader(false);
+            fetchDataFromBlockchain();
+          })
+          .on('receipt', (receipt) => {
+            setLoader(false);
+            fetchDataFromBlockchain();
+          })
+          .on('confirmation', (confirmationNumber, receipt) => {
+            setLoader(false);
+            fetchDataFromBlockchain();
+          })
+          .on('error', function(error) {
+            console.log('Error Code:', error.code);
+            console.log(error.message);
+            setLoader(false);
+          });
+      }
+      setInputValue('');
+    }
+  };
+
+  const reinvestRewardsHandler = () => {
+    if (!appStatus) {
+    } else {
       setLoader(true);
 
       // let convertToWei = window.web3.utils.toWei(inputValue, 'Ether')
       tokenStakingContract.methods
-          .claimRewards()
+          .reinvestTokens()
           .send({ from: account })
           .on('transactionHash', (hash) => {
             setLoader(false);
@@ -381,16 +389,13 @@ const App = () => {
         <div className={classes.childHeight}>
           <Staking
               account={account}
-              totalStaked={totalStaked}
-              contractBalance={contractBalance}
-              myReward={myReward}
               userBalance={userBalance}
               unStakeHandler={unStakeHandler}
               stakeHandler={stakeHandler}
               inputHandler={inputHandler}
               stakingContractHandler={stakingContractHandler}
               claimRewardsHandler={claimRewardsHandler}
-              apy={apy}
+              reinvestRewardsHandler={reinvestRewardsHandler}
           />
         </div>
       </div>
@@ -398,8 +403,6 @@ const App = () => {
         <div>
           <Info
               account={account}
-              totalStaked={totalStaked}
-              contractBalance={contractBalance}
 
               myStake={myStake}
               allRewardDebt={allRewardDebt}
@@ -412,9 +415,7 @@ const App = () => {
               finishTime={finishTime}
               rewardPerSec={rewardPerSec}
               allStakedAmount={allStakedAmount}
-              myReward={myReward}
               userBalance={userBalance}
-              apy={apy}
           />
         </div>
       </div>

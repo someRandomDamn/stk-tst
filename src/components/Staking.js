@@ -17,7 +17,6 @@ const Staking = (props) => {
     const setCurrentContractHandler = (event) => {
         event.preventDefault();
         setCurrentStakingContract(event.target.value);
-        setCurrentStakingContract(event.target.value);
     };
 
   const goMax = () => {
@@ -72,24 +71,16 @@ const Staking = (props) => {
           alt="unstake icon"
           className={classes.stakeIcon}
         />
-        <p>Unstake All</p>
+        <p>Unstake (auto-harvest)</p>
       </button>
-        <button className={classes.unstakeButton} onClick={props.claimRewardsHandler}>
-            <img
-                src={unstakeIcon}
-                alt="unstake icon"
-                className={classes.stakeIcon}
-            />
-            <p>Claim Rewards</p>
-        </button>
         &nbsp; &nbsp;
-        <button className={classes.unstakeButton} onClick={props.createStakingPoolHandler}>
+        <button className={classes.unstakeButton} onClick={props.reinvestRewardsHandler}>
             <img
                 src={unstakeIcon}
                 alt="unstake icon"
                 className={classes.stakeIcon}
             />
-            <p>Create Pool</p>
+            <p>Reinvest</p>
         </button>
 
     </div>

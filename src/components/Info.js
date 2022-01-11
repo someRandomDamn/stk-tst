@@ -19,7 +19,6 @@ const Info = (props) => {
             <h5>Staking end:{' '} {props.finishTime}</h5>
             <h5>Last reward time:{' '} {props.lastRewardTime}</h5>
             <h5 className={classes.goMax}>My balance: {props.userBalance}</h5>
-            <h5 className={classes.goMax}> Contract balance: {props.contractBalance}</h5>
           </div>
     </div>
   );
