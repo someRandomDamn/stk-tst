@@ -2,23 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a80986a4-75a9-4661-906c-8afb21e409c8" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src_deprecated/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/src_deprecated/App.module.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/abis/Staking.json" beforeDir="false" afterPath="$PROJECT_DIR$/src_deprecated/abis/Staking.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/abis/StakingCreation.json" beforeDir="false" afterPath="$PROJECT_DIR$/src_deprecated/abis/StakingCreation.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/abis/TestToken.json" beforeDir="false" afterPath="$PROJECT_DIR$/src_deprecated/abis/TestToken.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/assets/icon.png" beforeDir="false" afterPath="$PROJECT_DIR$/src_deprecated/assets/icon.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/assets/stake.png" beforeDir="false" afterPath="$PROJECT_DIR$/src_deprecated/assets/stake.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/assets/unstake.png" beforeDir="false" afterPath="$PROJECT_DIR$/src_deprecated/assets/unstake.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/CreateStaking.js" beforeDir="false" afterPath="$PROJECT_DIR$/src_deprecated/components/CreateStaking.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Info.js" beforeDir="false" afterPath="$PROJECT_DIR$/src_deprecated/components/Info.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Staking.js" beforeDir="false" afterPath="$PROJECT_DIR$/src_deprecated/components/Staking.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Staking.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/src_deprecated/components/Staking.module.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/src_deprecated/index.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src_deprecated/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -77,7 +61,7 @@
       <workItem from="1641990762499" duration="1678000" />
       <workItem from="1641994775548" duration="2733000" />
       <workItem from="1642000023985" duration="3131000" />
-      <workItem from="1642010082198" duration="1846000" />
+      <workItem from="1642010082198" duration="2660000" />
     </task>
     <servers />
   </component>
