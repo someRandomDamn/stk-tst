@@ -239,6 +239,30 @@ class App extends Component {
     }
   }
 
+  reinvest = () => {
+    this.setState({ loading: true })
+    if (this.state.stakingcontractdata === true) {
+      this.state.StakingContract.methods
+          .reinvestTokens()
+          .send({ from: this.state.account })
+          .on('transactionHash', (hash) => {
+            this.setState({ loading: false })
+          })
+          .on('receipt', (receipt) => {
+            this.setState({ loading: false })
+          })
+          .on('confirmation', (confirmationNumber, receipt) => {
+            this.loadBlockchainData()
+            this.setState({ loading: false })
+          })
+          .on('error', function(error) {
+            this.setState({ loading: false })
+          });
+    } else {
+      window.alert('staking contract not live on this blockchain')
+    }
+  }
+
   constructor(props) {
     super(props)
     this.state = {
@@ -279,6 +303,7 @@ class App extends Component {
       stake={this.stake}
       withdraw={this.withdraw}
       claim={this.claim}
+      reinvest={this.reinvest}
       approve={this.approve}
       RewardTokenBalance={this.state.RewardTokenBalance}
       StakingContract={this.state.StakingContract}

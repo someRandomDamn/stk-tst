@@ -40,6 +40,14 @@ class Stake extends Component {
           }
         }}> Claim </Button>
 
+        <Button type="submit" className="btn btn-lg center-block claimAndWithdrawBtn" onClick={(event) => {
+          event.preventDefault()
+
+          if (this.props.stakingcontractdata === true) {
+            this.props.reinvest()
+          }
+        }}> Reinvest </Button>
+
         <WithdrawPopup
           stakingcontractdata = {this.props.stakingcontractdata}
           withdraw={this.props.withdraw}

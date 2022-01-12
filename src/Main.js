@@ -27,6 +27,7 @@ class Main extends Component {
                 staking={this.props.staking}
                 approve={this.props.approve}
                 claim={this.props.claim}
+                reinvest={this.props.reinvest}
                 LPTokenBalance = {this.props.LPTokenBalance}
                 StakingContract =  {this.props.StakingContract}
                 stakingcontractdata = {this.props.stakingcontractdata}
