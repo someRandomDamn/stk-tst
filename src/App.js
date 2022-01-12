@@ -183,7 +183,7 @@ class App extends Component {
     if (this.state.stakingcontractdata === true) {
 
       if (this.state.isStakeTokenApproved) {
-        this.state.StakingContract.methods.withdrawStake(AmountStaked).send({ from: this.state.account }).on('transactionHash', (hash) => {
+        this.state.StakingContract.methods.stakeTokens(AmountStaked).send({ from: this.state.account }).on('transactionHash', (hash) => {
           this.loadBlockchainData()
           this.setState({ loading: false })
         })
