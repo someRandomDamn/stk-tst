@@ -2,7 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a80986a4-75a9-4661-906c-8afb21e409c8" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/App.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Main.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Stake.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Stake.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,7 +65,7 @@
       <workItem from="1641990762499" duration="1678000" />
       <workItem from="1641994775548" duration="2733000" />
       <workItem from="1642000023985" duration="3131000" />
-      <workItem from="1642010082198" duration="3480000" />
+      <workItem from="1642010082198" duration="3844000" />
     </task>
     <servers />
   </component>
@@ -77,9 +81,9 @@
       <screen x="0" y="0" width="1920" height="1044" />
     </state>
     <state x="764" y="435" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1044@0.0.1920.1044" timestamp="1641835060721" />
-    <state x="664" y="90" width="821" height="784" key="find.popup" timestamp="1642013569293">
+    <state x="664" y="90" width="821" height="784" key="find.popup" timestamp="1642013589187">
       <screen x="0" y="0" width="1920" height="1044" />
     </state>
-    <state x="664" y="90" width="821" height="784" key="find.popup/0.0.1920.1044@0.0.1920.1044" timestamp="1642013569293" />
+    <state x="664" y="90" width="821" height="784" key="find.popup/0.0.1920.1044@0.0.1920.1044" timestamp="1642013589187" />
   </component>
 </project>

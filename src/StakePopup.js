@@ -21,7 +21,7 @@ class StakePopup extends Component {
 
     return (
       <>
-        <Button className="btn btn-warning btn-sm claimAndWithdrawBtn" onClick={(event) => {
+        <Button className="btn btn-warning btn-sm" onClick={(event) => {
           event.preventDefault()
           this.setState({ show: true })
         }}>
