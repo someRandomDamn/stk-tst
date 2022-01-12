@@ -1,410 +1,326 @@
-import React, { useState, useEffect } from 'react';
+import './App.css';
 import { MutatingDots } from "react-loader-spinner";
+import Main from './Main.js'
+import React, { Component } from 'react';
 import Web3 from 'web3';
-import classes from './App.module.css';
-import TestTokenAbi from '../src/abis/TestToken.json';
-import TokenStakingAbi from '../src/abis/StakingCreation.json';
-import StakingAbi from '../src/abis/Staking.json';
-import CreateStaking from "./components/CreateStaking";
-import Info from "./components/Info";
-import Staking from './components/Staking';
+import stakingContract from './abis/stakingContract.json';
+import Navbar from './Navbar.js';
+import StakeToken from './abis/StakeToken.json';
+import RewardToken from './abis/RewardToken.json';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import moment from 'moment';
 
-const App = () => {
-  const [account, setAccount] = useState('Connecting to Metamask..');
-  const [network, setNetwork] = useState({ id: '0', name: 'none' });
-  const [testTokenContract, setTestTokenContract] = useState('');
-  const [stakingCreationContract, setStakingCreationContract] = useState('');
-  const [tokenStakingContract, setTokenStakingContract] = useState('');
-  const [inputValue, setInputValue] = useState('');
-  const [allStakedAmount, setAllStakedAmount] = useState(0);
-  const [myStake, setMyStake] = useState(0);
-  const [allRewardDebt, setAllRewardDebt] = useState(0);
-  const [allPaidReward, setAllPaidReward] = useState(0);
-  const [accTokensPerShare, setAccTokensPerShare] = useState(0);
-  const [participants, setParticipants] = useState(0);
-  const [pendingReward, setPendingReward] = useState(0);
-  const [lastRewardTime, setLastRewardTime] = useState(0);
-  const [startTime, setStartTime] = useState(0);
-  const [finishTime, setFinishTime] = useState(0);
-  const [rewardPerSec, setRewardPerSec] = useState(0);
+class App extends Component {
 
-  const [appStatus, setAppStatus] = useState(true);
-  const [loader, setLoader] = useState(false);
-  const [userBalance, setUserBalance] = useState('0');
-  const [currentStakingContractAddress, setCurrentStakingContract] = useState('');
+  async componentDidMount() {
+    await this.loadWeb3()
+    await this.loadBlockchainData()
+  }
 
-  const tokenContractAddress = '0x9f11c83606fe28542f0278797c78cb66488d7eef';
-  const stakingContractAddress = '0x5564F5c9f63B8C69d0D1D188306c96F1CD9E3fFD';
+  async loadBlockchainData() {
+    const web3 = window.web3
 
-  useEffect(() => {
-    //connecting to ethereum blockchain
-    fetchDataFromBlockchain();
+    // load stake token and stake token bal of connected address
+    const StakeTokenData = StakeToken.networks[this.state.networkID]
+    if (StakeTokenData) {
+      const StakeTokenAddress = StakeToken.networks[this.state.networkID].address
+      const staketoken = new web3.eth.Contract(StakeToken.abi, StakeTokenAddress)
+      this.setState({ staketoken })
 
-  }, [currentStakingContractAddress]);
+      let [
+        stakeTokenBalance,
+        allowance,
+      ] = await Promise.all([
+        staketoken.methods.balanceOf(this.state.account).call(),
+        staketoken.methods.allowance(this.state.account, stakingContract.networks[this.state.networkID].address).call(),
+      ])
 
-  const fetchDataFromBlockchain = async () => {
-    console.log('currentStakingContractAddress');
-    console.log(currentStakingContractAddress);
-    setLoader(true);
+      this.setState({
+        stakeTokenBalance: window.web3.utils.fromWei(stakeTokenBalance.toString(), 'Ether'),
+        isStakeTokenApproved: allowance === this.state.approveAmount,
+      })
+
+    } else {
+      window.alert('token to be staked not on this blockchain network, switch to ropsten')
+    }
+
+    // load stake token and stake token bal of connected address
+    const RewardTokenData = RewardToken.networks[this.state.networkID]
+    if (RewardTokenData) {
+      const RewardTokenAddress = RewardToken.networks[this.state.networkID].address
+
+      const rewardtoken = new web3.eth.Contract(RewardToken.abi, RewardTokenAddress)
+      this.setState({ rewardtoken: rewardtoken })
+
+      let RewardTokenBalance = await rewardtoken.methods.balanceOf(this.state.account).call()
+
+      this.setState({
+        RewardTokenBalance: RewardTokenBalance.toString()
+      })
+
+    } else {}
+
+
+    // load staking contract 
+    const StakingContractData = stakingContract.networks[this.state.networkID]
+    if (StakingContractData) {
+      this.setState({ stakingcontractdata: true })
+      const StakingContractAddress = stakingContract.networks[this.state.networkID].address
+      this.setState({ StakingContractAddress: StakingContractAddress })
+
+      const StakingContract = new web3.eth.Contract(stakingContract.abi, StakingContractAddress)
+
+      let [
+        myStake,
+        allRewardDebt,
+        allPaidReward,
+        accTokensPerShare,
+        pendingReward,
+        lastRewardTime,
+        rewardPerSec,
+        startTime,
+        finishTime,
+        allStakedAmount,
+      ] = await Promise.all([
+        StakingContract.methods.getUserInfo(this.state.account).call(),
+        StakingContract.methods.allRewardDebt().call(),
+        StakingContract.methods.allPaidReward().call(),
+        StakingContract.methods.accTokensPerShare().call(),
+        StakingContract.methods.pendingReward(this.state.account).call(),
+        StakingContract.methods.lastRewardTime().call(),
+        StakingContract.methods.rewardPerSec().call(),
+        StakingContract.methods.startTime().call(),
+        StakingContract.methods.finishTime().call(),
+        StakingContract.methods.allStakedAmount().call(),
+      ])
+
+      myStake = window.web3.utils.fromWei(myStake[0].toString(), 'Ether');
+      allRewardDebt = window.web3.utils.fromWei(allRewardDebt.toString(), 'Ether');
+      allPaidReward = window.web3.utils.fromWei(allPaidReward.toString(), 'Ether');
+      accTokensPerShare = window.web3.utils.fromWei(accTokensPerShare.toString(), 'Ether');
+      pendingReward = window.web3.utils.fromWei(pendingReward.toString(), 'Ether');
+      // rewardPerSec = window.web3.utils.fromWei(rewardPerSec.toString(), 'Ether');
+      allStakedAmount = allStakedAmount ? window.web3.utils.fromWei(allStakedAmount.toString(), 'Ether') : 0;
+      startTime = moment.unix(startTime).format("YYYY-MM-DD HH:mm");
+      finishTime =  moment.unix(finishTime).format("YYYY-MM-DD HH:mm");
+      lastRewardTime =  moment.unix(lastRewardTime).format("YYYY-MM-DD HH:mm");
+      let weeklyEstimate = window.web3.utils.fromWei(
+        window.web3.utils.toBN(rewardPerSec).muln(60 * 60 * 24 * 7),
+        'Ether',
+      )
+
+      this.setState({
+        StakingContract,
+        myStake,
+        allRewardDebt,
+        allPaidReward,
+        accTokensPerShare,
+        pendingReward,
+        weeklyEstimate,
+        allStakedAmount,
+        startTime,
+        finishTime,
+        lastRewardTime,
+      })
+
+    } else {
+      this.setState({ stakingcontractdata: false })
+      window.alert('staking contract not live on this blockchain, please switch to ropsten')
+    }
+
+    this.setState({ loading: false })
+  }
+
+  async loadWeb3() {
     if (window.ethereum) {
-      // await window.ethereum.send('eth_requestAccounts');
-      await window.ethereum.request({ method: 'eth_requestAccounts' });
-      window.web3 = new Web3(window.ethereum);
+      window.web3 = new Web3(window.ethereum)
+      await window.ethereum.enable()
+      const web3 = window.web3
 
-      //connecting to metamask
-      let web3 = window.web3;
-      const accounts = await web3.eth.getAccounts();
-      setAccount(accounts[0]);
+      const accounts = await web3.eth.getAccounts()
+      this.setState({ account: accounts[0] })
 
-      //loading users network ID and name
-      const networkId = await web3.eth.net.getId();
-      const networkType = await web3.eth.net.getNetworkType();
-      setNetwork({ ...network, id: networkId, name: networkType });
+      const ethBalance = await web3.eth.getBalance(this.state.account)
+      this.setState({ ethBalance: ethBalance })
 
-      //loading TestTokenAbi contract data
-      if (networkId === 97) {
-        let web3 = window.web3;
-        const testToken = new web3.eth.Contract(
-          TestTokenAbi,
-          tokenContractAddress
-        );
-        setTestTokenContract(testToken);
-
-        //  fetching balance of Testtoken and storing in state
-        let testTokenBalance = await testToken.methods
-          .balanceOf(accounts[0])
-          .call();
-        let convertedBalance = window.web3.utils.fromWei(
-          testTokenBalance.toString(),
-          'Ether'
-        );
-        setUserBalance(convertedBalance);
-
-      } else {
-        setAppStatus(false);
-        window.alert(
-          'TestToken contract is not deployed on this network, please change to testnet'
-        );
-      }
-
-      if (networkId === 97) {
-        let web3 = window.web3;
-        const stakingCreationC = new web3.eth.Contract(
-          TokenStakingAbi,
-          stakingContractAddress,
-        );
-        setStakingCreationContract(stakingCreationC);
-
-        if (currentStakingContractAddress) {
-          const stakingContract = new web3.eth.Contract(
-              StakingAbi,
-              currentStakingContractAddress,
-          );
-          console.log(currentStakingContractAddress);
-          setTokenStakingContract(stakingContract);
-
-          let [
-            myStake,
-            allRewardDebt,
-            allPaidReward,
-            accTokensPerShare,
-            participants,
-            pendingReward,
-            lastRewardTime,
-            rewardPerSec,
-            startTime,
-            finishTime,
-            allStakedAmount,
-          ] = await Promise.all([
-            stakingContract.methods.getUserInfo(accounts[0]).call(),
-            stakingContract.methods.allRewardDebt().call(),
-            stakingContract.methods.allPaidReward().call(),
-            stakingContract.methods.accTokensPerShare().call(),
-            stakingContract.methods.participants().call(),
-            stakingContract.methods.pendingReward(accounts[0]).call(),
-            stakingContract.methods.lastRewardTime().call(),
-            stakingContract.methods.rewardPerSec().call(),
-            stakingContract.methods.startTime().call(),
-            stakingContract.methods.finishTime().call(),
-            stakingContract.methods.allStakedAmount().call(),
-          ])
-
-          myStake = window.web3.utils.fromWei(myStake[0].toString(), 'Ether');
-          allRewardDebt = window.web3.utils.fromWei(allRewardDebt.toString(), 'Ether');
-          allPaidReward = window.web3.utils.fromWei(allPaidReward.toString(), 'Ether');
-          accTokensPerShare = window.web3.utils.fromWei(accTokensPerShare.toString(), 'Ether');
-          pendingReward = window.web3.utils.fromWei(pendingReward.toString(), 'Ether');
-          rewardPerSec = window.web3.utils.fromWei(rewardPerSec.toString(), 'Ether');
-          allStakedAmount = allStakedAmount ? window.web3.utils.fromWei(allStakedAmount.toString(), 'Ether') : 0;
-          startTime = moment.unix(startTime).format("YYYY-MM-DD HH:mm");
-          finishTime =  moment.unix(finishTime).format("YYYY-MM-DD HH:mm");
-          lastRewardTime =  moment.unix(lastRewardTime).format("YYYY-MM-DD HH:mm");
-
-          setMyStake(myStake);
-          setAllRewardDebt(allRewardDebt);
-          setAllPaidReward(allPaidReward);
-          setAccTokensPerShare(accTokensPerShare);
-          setPendingReward(pendingReward);
-          setRewardPerSec(rewardPerSec);
-          setAllStakedAmount(allStakedAmount);
-          setStartTime(startTime);
-          setFinishTime(finishTime);
-          setLastRewardTime(lastRewardTime);
-          setParticipants(participants);
-        } else {
-          console.log('exited');
-        }
-
-      } else {
-        setAppStatus(false);
-        window.alert(
-          'Staking contract is not deployed on this network, please change to testnet'
-        );
-      }
-    } else if (!window.web3) {
-      setAppStatus(false);
-      setAccount('Metamask is not detected');
+      const networkID = await web3.eth.net.getId()
+      console.log(networkID)
+      this.setState({networkID: networkID})
     }
+    else if (window.web3) {
+      window.web3 = new Web3(window.web3.currentProvider)
+      const web3 = window.web3
 
-    setLoader(false);
-  };
+      const accounts = await web3.eth.getAccounts()
+      this.setState({ account: accounts[0] })
+  
+      const ethBalance = await web3.eth.getBalance(this.state.account)
+      this.setState({ ethBalance: ethBalance })
 
-  const inputHandler = (received) => {
-    setInputValue(received);
-  };
-
-  const stakingContractHandler = (contract) => {
-    setCurrentStakingContract(contract);
-  };
-
-  const stakeHandler = () => {
-    if (!appStatus) {
-    } else {
-      if (!inputValue || inputValue === '0' || inputValue < 0) {
-        setInputValue('');
-      } else {
-        setLoader(true);
-        let convertToWei = window.web3.utils.toWei(inputValue, 'Ether');
-
-        //aproving tokens for spending
-        testTokenContract.methods
-          .approve(currentStakingContractAddress, convertToWei)
-          .send({ from: account })
-          .on('transactionHash', (hash) => {
-            tokenStakingContract.methods
-              .stakeTokens(convertToWei)
-              .send({ from: account })
-              .on('transactionHash', (hash) => {
-                setLoader(false);
-                fetchDataFromBlockchain();
-              })
-              .on('receipt', (receipt) => {
-                setLoader(false);
-                fetchDataFromBlockchain();
-              })
-              .on('confirmation', (confirmationNumber, receipt) => {
-                setLoader(false);
-                fetchDataFromBlockchain();
-              });
-          })
-          .on('error', function(error) {
-            setLoader(false);
-            console.log('Error Code:', error.code);
-            console.log(error.message);
-          });
-        setInputValue('');
-      }
+      const networkID = await web3.eth.net.getId()
+      console.log(networkID)
+      this.setState({networkID: networkID})
     }
-  };
-
-  const unStakeHandler = () => {
-    if (!appStatus) {
-    } else {
-      if (!inputValue || inputValue === '0' || inputValue < 0) {
-        setInputValue('');
-      } else {
-        setLoader(true);
-        let convertToWei = window.web3.utils.toWei(inputValue, 'Ether')
-        tokenStakingContract.methods
-          .withdrawStake(convertToWei)
-          .send({ from: account })
-          .on('transactionHash', (hash) => {
-            setLoader(false);
-            fetchDataFromBlockchain();
-          })
-          .on('receipt', (receipt) => {
-            setLoader(false);
-            fetchDataFromBlockchain();
-          })
-          .on('confirmation', (confirmationNumber, receipt) => {
-            setLoader(false);
-            fetchDataFromBlockchain();
-          })
-          .on('error', function(error) {
-            console.log('Error Code:', error.code);
-            console.log(error.message);
-            setLoader(false);
-          });
-      }
-      setInputValue('');
+    else {
+      window.alert('Non-Ethereum browser detected. Please install metamask chrome extension and refresh page')
     }
-  };
+  }
 
-  const claimRewardsHandler = () => {
-    if (!appStatus) {
-    } else {
-      if (!inputValue || inputValue === '0' || inputValue < 0) {
-        setInputValue('');
-      } else {
-        setLoader(true);
-        let convertToWei = window.web3.utils.toWei(inputValue, 'Ether')
-        tokenStakingContract.methods
-          .withdrawStake(convertToWei)
-          .send({ from: account })
-          .on('transactionHash', (hash) => {
-            setLoader(false);
-            fetchDataFromBlockchain();
-          })
-          .on('receipt', (receipt) => {
-            setLoader(false);
-            fetchDataFromBlockchain();
-          })
-          .on('confirmation', (confirmationNumber, receipt) => {
-            setLoader(false);
-            fetchDataFromBlockchain();
-          })
-          .on('error', function(error) {
-            console.log('Error Code:', error.code);
-            console.log(error.message);
-            setLoader(false);
-          });
-      }
-      setInputValue('');
-    }
-  };
+  approve = () => {
+    if (this.state.stakingcontractdata === true) {
+      this.state.staketoken.methods
+        // make it +/- max approve so its needed only once
+        .approve(this.state.StakingContractAddress, this.state.approveAmount)
+        .send({ from: this.state.account })
+        .on('transactionHash', (hash) => {})
+        .on('confirmation',(confirmationNumber) => {
+          this.setState({ isStakeTokenApproved: true })
+        })
+    } else { window.alert('staking contract not live on this blockchain') }
+  }
 
-  const reinvestRewardsHandler = () => {
-    if (!appStatus) {
-    } else {
-      setLoader(true);
+  stake = (AmountStaked) => {
+    if (this.state.stakingcontractdata === true) {
 
-      // let convertToWei = window.web3.utils.toWei(inputValue, 'Ether')
-      tokenStakingContract.methods
-          .reinvestTokens()
-          .send({ from: account })
-          .on('transactionHash', (hash) => {
-            setLoader(false);
-            fetchDataFromBlockchain();
-          })
-          .on('receipt', (receipt) => {
-            setLoader(false);
-            fetchDataFromBlockchain();
-          })
-          .on('confirmation', (confirmationNumber, receipt) => {
-            setLoader(false);
-            fetchDataFromBlockchain();
-          })
-          .on('error', function(error) {
-            console.log('Error Code:', error.code);
-            console.log(error.message);
-            setLoader(false);
-          });
+      if (this.state.isStakeTokenApproved) {
+        this.state.StakingContract.methods.withdrawStake(AmountStaked).send({ from: this.state.account }).on('transactionHash', (hash) => {
+          this.loadBlockchainData()
+          this.setState({ loading: false })
+        })
+      } else { window.alert('staking contract has no enough access to the owners token') }
 
-      setInputValue('');
-    }
-  };
+    } else { window.alert('staking contract not live on this blockchain') }
+  }
 
-  const createStakingPoolHandler = (stakingObject) => {
-    if (!appStatus) {
-    } else {
-      setLoader(true);
-      let convertedToWei = window.web3.utils.toWei(stakingObject.poolTokenSupply, 'Ether');
-
-      //aproving tokens for spending
-      testTokenContract.methods
-        .approve(stakingContractAddress, convertedToWei)
-        .send({ from: account })
+  withdraw = (AmountToBeWithdrawn) => {
+    if (this.state.stakingcontractdata === true) {
+      this.state.StakingContract.methods
+        .withdrawStake(AmountToBeWithdrawn)
+        .send({ from: this.state.account })
         .on('transactionHash', (hash) => {
-          stakingCreationContract.methods.createStakingPool(
-                stakingObject.stakeAddress,
-                stakingObject.poolAddress,
-                stakingObject.startBlock,
-                stakingObject.finishBlock,
-                convertedToWei,
-                stakingObject.hasWhitelisting,
-              )
-              .send({ from: account })
-              .on('transactionHash', (hash) => {
-                setLoader(false);
-                fetchDataFromBlockchain();
-              })
-              .on('receipt', (receipt) => {
-                setLoader(false);
-                fetchDataFromBlockchain();
-              })
-              .on('confirmation', (confirmationNumber, receipt) => {
-                setLoader(false);
-                fetchDataFromBlockchain();
-              });
+          this.setState({ loading: false })
+        })
+        .on('receipt', (receipt) => {
+          this.setState({ loading: false })
+        })
+        .on('confirmation', (confirmationNumber, receipt) => {
+          this.loadBlockchainData()
+          this.setState({ loading: false })
         })
         .on('error', function(error) {
-          setLoader(false);
-          console.log('Error Code:', error.code);
-          console.log(error.message);
+          this.setState({ loading: false })
         });
-      setInputValue('');
+    } else {
+      window.alert('staking contract not live on this blockchain')
     }
-  };
+  }
 
-  return (
-    <div className={classes.Grid}>
-      <div className={classes.ChildLoader}>
-        {loader ? <MutatingDots arialLabel="loading-indicator" width="100px" /> : null}
-      </div>
-      <div className={classes.Child1}>
-        <div>
-          <CreateStaking
-            createStakingPoolHandler={createStakingPoolHandler}
-          />
-        </div>
-      </div>
-      <div className={classes.Child2}>
-        <div className={classes.childHeight}>
-          <Staking
-              account={account}
-              userBalance={userBalance}
-              unStakeHandler={unStakeHandler}
-              stakeHandler={stakeHandler}
-              inputHandler={inputHandler}
-              stakingContractHandler={stakingContractHandler}
-              claimRewardsHandler={claimRewardsHandler}
-              reinvestRewardsHandler={reinvestRewardsHandler}
-          />
-        </div>
-      </div>
-      <div className={classes.Child3}>
-        <div>
-          <Info
-              account={account}
+  claim = () => {
+    this.setState({ loading: true })
+    if (this.state.stakingcontractdata === true) {
+      this.state.StakingContract.methods
+        .withdrawStake(0)
+        .send({ from: this.state.account })
+        .on('transactionHash', (hash) => {
+          this.setState({ loading: false })
+        })
+        .on('receipt', (receipt) => {
+          this.setState({ loading: false })
+        })
+        .on('confirmation', (confirmationNumber, receipt) => {
+          this.loadBlockchainData()
+          this.setState({ loading: false })
+        })
+        .on('error', function(error) {
+          this.setState({ loading: false })
+        });
+    } else {
+      window.alert('staking contract not live on this blockchain')
+    }
+  }
 
-              myStake={myStake}
-              allRewardDebt={allRewardDebt}
-              allPaidReward={allPaidReward}
-              accTokensPerShare={accTokensPerShare}
-              participants={participants}
-              pendingReward={pendingReward}
-              lastRewardTime={lastRewardTime}
-              startTime={startTime}
-              finishTime={finishTime}
-              rewardPerSec={rewardPerSec}
-              allStakedAmount={allStakedAmount}
-              userBalance={userBalance}
-          />
+  constructor(props) {
+    super(props)
+    this.state = {
+      approveAmount: '115792089237316195423570985008687907853269984665640564039457584007913129639935',
+      account: '',
+      ethBalance: '0',
+      StakingContract: {},
+      stakeTokenBalance: '0',
+      loading: true,
+      staketoken: {},
+      staking: 'true',
+      rewardtoken: {},
+      RewardTokenBalance: '0',
+      StakingContractAddress: '',
+      stakingcontractdata: true,
+      isStakeTokenApproved: false,
+
+      myStake: '0',
+      allRewardDebt: '0',
+      allPaidReward: '0',
+      accTokensPerShare: '0',
+      pendingReward: '0',
+      weeklyEstimate: '0',
+      allStakedAmount: '0',
+      startTime: '',
+      finishTime: '',
+      lastRewardTime: '',
+    }
+  }
+
+  render() {
+    let content
+
+    content = <Main
+      ethBalance={this.state.ethBalance}
+      stakeTokenBalance={this.state.stakeTokenBalance}
+      staking={this.state.staking}
+      stake={this.stake}
+      withdraw={this.withdraw}
+      claim={this.claim}
+      approve={this.approve}
+      RewardTokenBalance={this.state.RewardTokenBalance}
+      StakingContract={this.state.StakingContract}
+      stakingcontractdata={this.state.stakingcontractdata}
+      isStakeTokenApproved={this.state.isStakeTokenApproved}
+      loading={this.state.loading}
+
+
+      myStake={this.state.myStake}
+      allRewardDebt={this.state.allRewardDebt}
+      allPaidReward={this.state.allPaidReward}
+      accTokensPerShare={this.state.accTokensPerShare}
+      pendingReward={this.state.pendingReward}
+      weeklyEstimate={this.state.weeklyEstimate}
+      allStakedAmount={this.state.allStakedAmount}
+      startTime={this.state.startTime}
+      finishTime={this.state.finishTime}
+      lastRewardTime={this.state.lastRewardTime}
+    />
+
+
+    return (
+      <div className = 'secondDiv'>
+        <div className="App secondDiv" >
+          <Navbar account={this.state.account} />
+          <header className="App-header">
+            <main role='main' className='col-lg-12 d-flex ml-auto mr-auto' style={{ maxWidth: '600px' }}></main>
+            <a
+              className="App-link"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+            </a>
+            <div className='loaderTop'>{this.state.loading ? <MutatingDots arialLabel="loading-indicator" width="100px" /> : null}</div>
+            {content}
+          </header>
+          
         </div>
       </div>
-    </div>
-  );
-};
+    );
+
+  }
+}
 
 export default App;

@@ -1,0 +1,82 @@
+
+
+.firstDiv {
+  background-color: lightblue; 
+  background-position: 100% 100%; 
+  margin: 0em; 
+  padding: 0em; 
+  height: 100vh;
+}
+
+.secondDiv{
+  background-image: url(assets/eth-diamond-black-gray.png);
+  background-repeat: no-repeat; 
+  background-attachment: fixed; 
+  background-size: 100% 100%;
+  height: 100vh;
+}
+
+
+
+.stake-stake-btn{
+  background-color: lightgrey; 
+  width: 50%;
+  color: black;
+  
+}
+.stake-withdraw-btn{
+  background-color: white; 
+  width: 50%; 
+  color: black;
+} 
+
+.stakenow-btn{
+  width: 100%; 
+  background-color: lightgrey;
+}
+
+.withdrawnow-btn{
+  width: 100%;
+  background-color: lightgrey;
+
+}
+
+
+.card-props{
+  width: fit-content;
+  height: auto;
+  margin:  auto;
+  padding: 0px;
+  position: relative;
+  margin-top: 18vh;
+}
+
+.token-declaration-text{
+  margin-top: 1%;
+}
+
+.infoTableValue{
+  text-align: right;
+  min-width: 50px;
+}
+
+.claimAndWithdrawBtn{
+  width: 48%;
+  margin: 0.25%;
+}
+
+.token-heading-text{
+  margin-bottom: 50px;
+}
+
+.token-heading-btn{
+  text-align: right;
+  width: 150px;
+  min-width: 150px;
+  max-width: 150px;
+}
+
+.loaderTop{
+  padding-top: 100px;
+  text-align: right;
+}
