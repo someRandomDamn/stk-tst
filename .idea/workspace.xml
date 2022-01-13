@@ -2,19 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a80986a4-75a9-4661-906c-8afb21e409c8" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/CreateStaking.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Staking.module.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/abis/StakingCreationContract.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Main.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/CreateStaking.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/CreateStaking.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Navbar.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Navbar.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/abis/stakingContract.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/abis/StakingContract.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -79,7 +71,7 @@
       <workItem from="1641994775548" duration="2733000" />
       <workItem from="1642000023985" duration="3131000" />
       <workItem from="1642010082198" duration="4506000" />
-      <workItem from="1642055287413" duration="12333000" />
+      <workItem from="1642055287413" duration="14643000" />
     </task>
     <servers />
   </component>
@@ -99,9 +91,9 @@
       <screen x="0" y="0" width="1920" height="1044" />
     </state>
     <state x="764" y="435" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1044@0.0.1920.1044" timestamp="1641835060721" />
-    <state x="664" y="90" width="821" height="784" key="find.popup" timestamp="1642068798715">
+    <state x="664" y="90" width="821" height="784" key="find.popup" timestamp="1642070194634">
       <screen x="0" y="0" width="1920" height="1044" />
     </state>
-    <state x="664" y="90" width="821" height="784" key="find.popup/0.0.1920.1044@0.0.1920.1044" timestamp="1642068798715" />
+    <state x="664" y="90" width="821" height="784" key="find.popup/0.0.1920.1044@0.0.1920.1044" timestamp="1642070194634" />
   </component>
 </project>

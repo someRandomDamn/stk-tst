@@ -34,7 +34,7 @@ class CreateStaking extends Component {
 	handleCreate = (event) => {
 		event.preventDefault();
 		this.props.createStakingPoolHandler(this.state.createStaking);
-		this.state.createStaking = this.emptyStaking;
+		this.setState({ createStaking: this.emptyStaking});
 	}
 
 	render() {

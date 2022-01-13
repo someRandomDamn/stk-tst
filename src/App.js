@@ -1,5 +1,4 @@
 import './App.css';
-import {MutatingDots} from "react-loader-spinner";
 import Main from './Main.js'
 import React, {Component} from 'react';
 import Web3 from 'web3';
@@ -369,7 +368,7 @@ class App extends Component {
 					<NavbarLocal account={this.state.account} loading={this.state.loading}/>
 					<div style={{ background: 0}}>
 						<Routes>
-							<Route path='/' element={<CreateStaking
+							<Route exact path='/' element={<CreateStaking
 								createStakingPoolHandler={this.createStakingPoolHandler}
 							/>}/>
 							<Route path='/staking-list' element={<Main
