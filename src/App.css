@@ -43,6 +43,16 @@
   margin-top: 18vh;
 }
 
+.create-stk-card-props{
+  width: 33%;
+  min-width: 600px;
+  height: auto;
+  margin:  auto;
+  padding: 0px;
+  position: relative;
+  margin-top: 18vh;
+}
+
 .token-declaration-text{
   margin-top: 1%;
 }
@@ -69,6 +79,5 @@
 }
 
 .loaderTop{
-  padding-top: 100px;
   text-align: right;
 }
