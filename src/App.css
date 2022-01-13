@@ -53,6 +53,12 @@
   margin-top: 18vh;
 }
 
+.nav-link-menu{
+  color: rgba(0,0,0,.5);
+  display: block;
+  padding: .5rem 1rem .5em .5em;
+}
+
 .token-declaration-text{
   margin-top: 1%;
 }
