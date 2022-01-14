@@ -157,7 +157,7 @@ class App extends Component {
 			tokenContractAddress,
 			TokenObj,
 			tokenBalance: window.web3.utils.fromWei(stakeTokenBalance.toString(), 'Ether'),
-			isTokenApproved: allowance.length >= 50, // TODO: fix allowance check to more appropriate. This one used for demo.
+			isTokenApproved: allowance?.length >= 50, // TODO: fix allowance check to more appropriate. This one used for demo.
 			symbol,
 			name,
 		};
