@@ -63,9 +63,9 @@ class WithdrawPopup extends Component {
             </Button>
             <Button variant="primary" className="claimAndWithdrawBtn" onClick={(event) => {
               event.preventDefault()
-              console.log(this.props.stakingcontractdata);
-              if (this.props.stakingcontractdata === true) {
-                this.props.withdraw(window.web3.utils.toWei(this.state.withdrawAmount, 'Ether'));
+
+              if (this.props.StakingContractData) {
+                this.props.withdraw(this.props.StakingContractData, window.web3.utils.toWei(this.state.withdrawAmount, 'Ether'));
                 this.handleClose(event);
               }
             }}>

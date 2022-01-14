@@ -61,8 +61,8 @@ class StakePopup extends Component {
             </Button>
             <Button variant="primary" className="claimAndWithdrawBtn" onClick={(event) => {
               event.preventDefault()
-              if (this.props.stakingcontractdata === true) {
-                this.props.stake(window.web3.utils.toWei(this.state.stakeAmount, 'Ether'));
+              if (this.props.StakingContractData) {
+                this.props.stake(this.props.StakingContractData, window.web3.utils.toWei(this.state.stakeAmount, 'Ether'));
                 this.handleClose(event);
               }
             }}>
